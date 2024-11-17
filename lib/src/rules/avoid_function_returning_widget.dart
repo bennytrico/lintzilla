@@ -6,7 +6,7 @@ class AvoidFunctionReturningWidget extends DartLintRule {
   const AvoidFunctionReturningWidget() : super(code: _code);
 
   static const _code = LintCode(
-    name: 'no_widget_functions_in_widget',
+    name: 'avoid_function_returning_widget',
     problemMessage:
         'Avoid creating widget-returning functions inside widget classes.',
     correctionMessage:
