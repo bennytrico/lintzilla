@@ -45,12 +45,37 @@ class AvoidFunctionReturningWidget extends DartLintRule {
   }
 
   void _checkMethods(ClassDeclaration node, ErrorReporter reporter) {
-    for (final member in node.members) {
+    // Get the LineInfo from the node
+    final lineInfo = node.thisOrAncestorOfType<CompilationUnit>()?.lineInfo;
+
+    if (lineInfo == null) {
+      return; // Handle cases where LineInfo is unavailable
+    }
+
+    for (final ClassMember member in node.members) {
       if (member is MethodDeclaration) {
         final returnType = member.returnType?.toString() ?? '';
         final methodName = member.name.lexeme;
 
+        // Check if the return type is `Widget` and it's not the `build` method
         if (returnType == 'Widget' && methodName != 'build') {
+          final methodStartOffset = member.beginToken.offset;
+          final methodEndOffset = member.endToken.offset;
+
+          // Use LineInfo to get line numbers
+          final methodStartLine =
+              lineInfo.getLocation(methodStartOffset).lineNumber;
+          final methodEndLine =
+              lineInfo.getLocation(methodEndOffset).lineNumber;
+
+          final methodLineCount = methodEndLine - methodStartLine + 1;
+
+          // Allow if the method has less than 50 lines
+          if (methodLineCount < 30) {
+            continue;
+          }
+
+          // Report an error if the method is too long
           reporter.reportErrorForNode(_code, member);
         }
       }
