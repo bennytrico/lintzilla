@@ -38,7 +38,9 @@ class AvoidFunctionReturningWidget extends DartLintRule {
     for (final member in node.members) {
       if (member is MethodDeclaration) {
         final returnType = member.returnType?.toString() ?? '';
-        if (returnType == 'Widget' && !member.name.lexeme.startsWith('build')) {
+        final methodName = member.name.lexeme;
+
+        if (returnType == 'Widget' && methodName != 'build') {
           reporter.reportErrorForNode(_code, member);
         }
       }
