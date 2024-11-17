@@ -31,7 +31,17 @@ class AvoidFunctionReturningWidget extends DartLintRule {
     if (extendsClause == null) return false;
 
     final superclass = extendsClause.superclass.name2.toString();
-    return superclass == 'StatelessWidget' || superclass == 'StatefulWidget';
+    if (superclass == 'StatelessWidget' || superclass == 'StatefulWidget') {
+      return true;
+    }
+
+    // Check if it's a `State` class for a `StatefulWidget`.
+    if (superclass == 'State' &&
+        extendsClause.superclass.typeArguments != null) {
+      return true;
+    }
+
+    return false;
   }
 
   void _checkMethods(ClassDeclaration node, ErrorReporter reporter) {
