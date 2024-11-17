@@ -8,7 +8,8 @@ class AvoidFunctionReturningWidget extends DartLintRule {
   static const _code = LintCode(
     name: 'avoid_function_returning_widget',
     problemMessage:
-        'Avoid creating widget-returning functions inside widget classes.',
+        'Avoid creating widget-returning functions inside widget classes if '
+        'method more than 30 lines.',
     correctionMessage:
         'Consider moving this function outside the widget class or creating a separate widget component.',
   );
